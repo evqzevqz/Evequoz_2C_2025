@@ -29,7 +29,7 @@
 #include "led.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
-
+#include "gpio_mcu.h"
 
 /*==================[macros and definitions]=================================*/
 
@@ -50,7 +50,7 @@ int8_t  convertToBcdArray (uint32_t data, uint8_t digits, uint8_t * bcd_number)
 	return 0; // Retornar 0 para indicar éxito
 }
 
-#include "gpio_mcu.h"
+
 
 typedef struct
 	{
