@@ -31,6 +31,7 @@
 #include <freertos/task.h>
 #include <gpio_mcu.h>
 
+
 /*==================[macros and definitions]=================================*/
 
 /*==================[internal data definition]===============================*/
@@ -61,9 +62,14 @@ int8_t  convertToBcdArray (uint32_t data, uint8_t digits, uint8_t * bcd_number)
 }
 
 void establecer_GPIO (uint8_t bcd_digit,  gpioConf_t *gpio_vector ){
-for (uint8_t i = 0; i < 4; i++) {
+    for (uint8_t i = 0; i < 4; i++) {
         uint8_t bit = (bcd_digit >> i) & 0x01; // Extrae el bit correspondiente
-        gpioWrite(gpio_vector[i].pin, bit);    // Cambia el estado del GPIO
+        if (bit == 1) {
+            GPIOOn(gpio_vector[i].pin);
+        } else {
+            GPIOOff(gpio_vector[i].pin);
+        }
+        
     }
 }
 
@@ -82,15 +88,18 @@ void mostrarNumero(uint32_t numero, uint8_t digits,
     convertToBcdArray(numero, digits, bcd_digits);
 
     for (uint8_t i = 0; i < digits; i++) {
-        establecer_GPIO(bcd_digits[i], gpio_bcd);   // carga valor BCD
-        gpioWrite(gpio_sel[i].pin, 1);               // habilita dígito i
-        vTaskDelay(pdMS_TO_TICKS(5));                // pequeño pulso latch
-        gpioWrite(gpio_sel[i].pin, 0);               // deshabilita dígito i
+        establecer_GPIO(bcd_digits[i], gpio_bcd);
+        GPIOOn(gpio_sel[i].pin);
+        vTaskDelay(pdMS_TO_TICKS(5)); // Agrega un pequeño delay para visualizar
+        GPIOOff(gpio_sel[i].pin);
     }
 }
 
 
 void app_main(void){
+
+
+
 
     // Pines BCD (antes era tu gpio_vector)
     gpioConf_t gpio_bcd[4] = {
@@ -108,13 +117,14 @@ void app_main(void){
     };
 
     // Inicializo todos los pines como salidas
-    for (int i = 0; i < 4; i++) GPIOInit(gpio_bcd[i].pin, gpio_bcd[i].dir);
-    for (int i = 0; i < 3; i++) GPIOInit(gpio_sel[i].pin, gpio_sel[i].dir);
+    for (int i = 0; i <= 4; i++) GPIOInit(gpio_bcd[i].pin, gpio_bcd[i].dir);
+    for (int i = 0; i <= 3; i++) GPIOInit(gpio_sel[i].pin, gpio_sel[i].dir);
 
     // Bucle principal: refresca continuamente el número
-    while (1) {
-        mostrarNumero(123, 3, gpio_bcd, gpio_sel); // mostrar "123"
+    
+        mostrarNumero(407, 3, gpio_bcd, gpio_sel); // mostrar "123"
         // (mostrarNumero multiplexa cada dígito 5ms, por eso hay que repetirlo)
-    }
+        while(1){}
+    
 }
 /*==================[end of file]============================================*/
