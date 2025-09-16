@@ -1,16 +1,16 @@
-/*! @mainpage Blinking switch
+/*! @mainpage Blinking switch: Ejercicio de introduccion a la Electronica Programable, usando los LEDs y los switch de la placa provista por la catedra. 
  *
  * \section genDesc General Description
  *
- * This example makes LED_1 and LED_2 blink if SWITCH_1 or SWITCH_2 are pressed.
+ * La aplicacion permite que se enciedan los LEDs 1 y 2 si se presiona la tecla 1 o 2 correspondientemente. Tambien si ambas teclas son presionadas al mismo tiempo, se encienda el LED 3.
  *
  * @section changelog Changelog
  *
  * |   Date	    | Description                                    |
  * |:----------:|:-----------------------------------------------|
- * | 12/09/2023 | Document creation		                         |
+ * | 15/09/2025 | Document creation		                         |
  *
- * @author Albano Peñalva (albano.penalva@uner.edu.ar)
+ * @author Ana Clara Evequoz 
  *
  */
 
