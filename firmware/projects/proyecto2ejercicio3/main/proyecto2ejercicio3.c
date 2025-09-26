@@ -104,6 +104,12 @@ void app_main(void){
     SwitchActivInt(SWITCH_2, InterrumpirMedicionyCongelarla,NULL);
     /* Inicialización del conteo de timers */
     TimerStart(timer.timer);
+    serial_config_t my_uart = {
+        .port = UART_PC,
+        .baud_rate = 9600,
+        .func_p = NULL,
+        .param_p = NULL,
+    };
 }
 
 
