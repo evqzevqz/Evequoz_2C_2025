@@ -16,10 +16,13 @@ static bool medicion_activa = false;
 static bool hold_activo = false;
 static uint16_t distancia_actual = 0;
 static uint16_t distancia_mostrada = 0;
+
 #define CONFIG_PERIOD 1000000
 
 /*==================[internal data definition]===============================*/
 TaskHandle_t atender_task_handle = NULL;
+
+
 
 /*==================[tarea medición + display]====================*/
 static void PrenderLedyMostrarDistancias(void *pvParameter){
@@ -29,6 +32,8 @@ static void PrenderLedyMostrarDistancias(void *pvParameter){
 
         if (medicion_activa) {
             distancia_actual = HcSr04ReadDistanceInCentimeters();
+            UartSendString(UART_PC,(char *)UartItoa(distancia_actual,10));
+            UartSendString(UART_PC, "cm\r\n");
         } else {
             distancia_actual = 0;
         }
@@ -58,9 +63,22 @@ static void PrenderLedyMostrarDistancias(void *pvParameter){
 
         // Mostrar distancia en LCD
         LcdItsE0803Write(distancia_mostrada); 
+
     }
 }
+/*==================[Funciones recibir UART]====================*/
+static void FuncUart(void *param){
+    uint8_t dato;
 
+    if (UartReadByte(UART_PC, &dato)) {   // si recibimos un byte
+        if (dato == 'O' || dato == 'o') {
+            medicion_activa = !medicion_activa;
+        }
+        if (dato == 'H' || dato == 'h') {
+            hold_activo = !hold_activo;
+        }
+    }
+}
 
 /*==================[Interrupcion botones]====================*/
 static void InterrumpirMedicionyReiniciarla(void *pvParameter){  
@@ -75,6 +93,8 @@ static void InterrumpirMedicionyCongelarla(void *pvParameter){
 static void AtenderTimer(void){
     vTaskNotifyGiveFromISR(atender_task_handle, NULL);
 }
+
+
 
 //aca evito consultar todo el tiempo que es lo que hace la tarea, para eso hago interrupciones, es decir el programa corre por si mismo
 // hasta que atiende a la tecla, es entrar a la funcion atender tecla y ver lo que te pide 
@@ -96,7 +116,14 @@ void app_main(void){
         .func_p = AtenderTimer,
         .param_p = NULL
     };
+    serial_config_t my_uart = {
+    .port = UART_PC,
+    .baud_rate = 9600,
+    .func_p = FuncUart,
+    .param_p = NULL,
+    };
     TimerInit(&timer);
+    UartInit(&my_uart);
     /* Creación de tareas */
     xTaskCreate(PrenderLedyMostrarDistancias, "medir_y_prender", 1024, NULL, 5, &atender_task_handle);
     /* Creación de Interrupciones */
@@ -104,18 +131,13 @@ void app_main(void){
     SwitchActivInt(SWITCH_2, InterrumpirMedicionyCongelarla,NULL);
     /* Inicialización del conteo de timers */
     TimerStart(timer.timer);
-    serial_config_t my_uart = {
-        .port = UART_PC,
-        .baud_rate = 9600,
-        .func_p = NULL,
-        .param_p = NULL,
-    };
+
 }
 
 
 //timer: para cuando necesitamos hacer temporazicaciones precisas en el tiempo usamos timer, osea precision temporal. 
 //Para lo que hay que hacer hay que usar la tecnica de notificacion de tareas, vtasknotifytakeygive, hacemos una funcion que sea atender timer, vtaskgiven(handle), que handle es la tarea que le voy a avisar y en la tarea es vtasktake notify
 
-//UART definimos la structura, usamos velocidad de transmision 960 caracteres por segundo, 9600(baud rate)/10, la inicializamos. Y mandakos por UartSendString() hay que tener cuidado que hay que convertir a valores y se usa funciones de uartintoa. Primera parte
+//UART definimos la estructura, usamos velocidad de transmision 960 caracteres por segundo, 9600(baud rate)/10, la inicializamos. Y mandakos por UartSendString() hay que tener cuidado que hay que convertir a valores y se usa funciones de uartintoa. Primera parte
 
 //Segunda Parte. Ver que pasa cuando paso caracteres desde la pc a la placa, uso interruptores, ahora hay que usar la tercer renglon del struct, donde ponemos la funcioon q atiende la interrumpcion y desp un uartreadbyte
