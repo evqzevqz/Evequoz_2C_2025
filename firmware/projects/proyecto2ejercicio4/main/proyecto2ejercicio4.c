@@ -1,12 +1,28 @@
-/**
- * @author Ana Clara Evequoz
- * @brief Modulacion con un potenciometro de una señal y generacion de señal ECG y visualización por osciloscopio virtual
- * @version 1.0
- * @date 2025-10-25
+/*! @mainpage Actividad 4 -Modulador de voltaje y visualizacion de ECG
+ *
+ * @section genDesc General Description
+ *
+ * Modulacion con un potenciometro de una señal y generacion de señal ECG y visualización por 
+ * osciloscopio virtual
  * 
  * 
+ *
+ * @section hardConn Hardware Connection
+ *
+ * |    Peripheral  |   ESP32   	|
+ * |:--------------:|:--------------|
+ * | 	Potenciometro    | 	CH1		|
+ * | 	UART_PC         | 	USB		|
+ *
+ * @section changelog Changelog
+ *
+ * |   Date	    | Description                                    |
+ * |:----------:|:-----------------------------------------------|
+ * | 27/10/2025 | Entrega proyecto 2		                         |
+ *
+ * @author Ana Clara Evequoz (ana.evequoz@ingenieria.uner.edu.ar)
+ *
  */
-
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -77,10 +93,6 @@ static void GenerarECG(void *param){
     while (true){
         ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
         AnalogOutputWrite(ECG[ecg_index]);
-        AnalogInputReadSingle(CH1, &medicion_adc);
-        UartSendString(UART_PC, ">volts: ");
-        UartSendString(UART_PC, (char *)UartItoa(medicion_adc, 10));
-        UartSendString(UART_PC, "\r\n");
         ecg_index++;
         if (ecg_index >= ECG_LENGTH) {
             ecg_index = 0;
@@ -105,14 +117,7 @@ static void AtenderTimerECG(void){
 
 /*==================[main]====================*/
 void app_main(void){
-    // Configuración de los ADC para leer en CH1 y CH
-    analog_input_config_t adc_modulador = {
-        .input = CH1,
-        .mode = ADC_SINGLE,
-        .func_p = NULL,
-        .param_p = NULL,
-        .sample_frec = 0,
-    };
+    // Configuración de los ADC para leer en CH1 
      analog_input_config_t adc_ecg = {
         .input = CH1,
         .mode = ADC_SINGLE,
@@ -140,19 +145,11 @@ void app_main(void){
     .func_p = NULL,
     .param_p = NULL,
     };
-    serial_config_t my_uart_ecg = {
-    .port = UART_PC,
-    .baud_rate = 115200,
-    .func_p = NULL,
-    .param_p = NULL,
-    };
 
     // Inicializaciones
     TimerInit(&timer_modulador);
     TimerInit(&timer_ecg);
     UartInit(&my_uart_modulador);
-    UartInit(&my_uart_ecg);
-    AnalogInputInit(&adc_modulador);
     AnalogInputInit(&adc_ecg);
     AnalogOutputInit();  // DAC en GPIO 0
 
