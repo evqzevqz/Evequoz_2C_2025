@@ -1,3 +1,30 @@
+/*! @mainpage Actividad 3 - Medidor de distancia por ultrasonido c/interrupciones y puerto serie
+ *
+ * @section genDesc General Description
+ *
+ * Este programa implementa un medidor de distancia por ultrasonido con interrupciones
+ * y comunicación por puerto serie. Extiende la funcionalidad de la Actividad 2 agregando
+ * comunicación UART para control remoto y visualización de datos.
+ *
+ * @section hardConn Hardware Connection
+ *
+ * |    Peripheral  |   ESP32   	|
+ * |:--------------:|:--------------|
+ * | 	HC-SR04 Trigger | 	GPIO_3		|
+ * | 	HC-SR04 Echo    | 	GPIO_2		|
+ * | 	UART_PC         | 	USB		|
+ *
+ * @section changelog Changelog
+ *
+ * |   Date	    | Description                                    |
+ * |:----------:|:-----------------------------------------------|
+ * | 27/10/2025 | Entrega proyecto 2		                         |
+ *
+ * @author Ana Clara Evequoz (ana.evequoz@ingenieria.uner.edu.ar)
+ *
+ */
+
+/*==================[inclusions]=============================================*/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -100,7 +127,7 @@ static void AtenderTimer(void){
 // hasta que atiende a la tecla, es entrar a la funcion atender tecla y ver lo que te pide 
 // ver en el driver de tecla y ver como habilitar la interrumpcion 
 //ahora con las teclas hago 2 interrupciones en vez de tareas, en el servicio de interruptor hay que tener funciones chiquitas como cambiar una variable, no medir, leer, etc(cosas q no se cuanto tiempo me lleve)
-//con switchactivint activo la interrupcion, hacemos una funcion que cambie el estado de variable hold,a su vez hay 2 funciones ya que hay 2 teclas
+//con switchactivint activo la interrumpcion, hacemos una funcion que cambie el estado de variable hold,a su vez hay 2 funciones ya que hay 2 teclas
 
 //VER NVIC DE TEORIA
 // el reset es una expecion no una interrunpcion que son distintas
@@ -138,6 +165,6 @@ void app_main(void){
 //timer: para cuando necesitamos hacer temporazicaciones precisas en el tiempo usamos timer, osea precision temporal. 
 //Para lo que hay que hacer hay que usar la tecnica de notificacion de tareas, vtasknotifytakeygive, hacemos una funcion que sea atender timer, vtaskgiven(handle), que handle es la tarea que le voy a avisar y en la tarea es vtasktake notify
 
-//UART definimos la estructura, usamos velocidad de transmision 960 caracteres por segundo, 9600(baud rate)/10, la inicializamos. Y mandakos por UartSendString() hay que tener cuidado que hay que convertir a valores y se usa funciones de uartintoa. Primera parte
+//UART definimos la estructura, usamos velocidad de transmision 960 caracteres por segundo, 9600(baud rate)/10, la inicializamos. Y mandakos por UartSendString() hay to que tener cuidado que hay que convertir a valores y se usa funciones de uartintoa. Primera parte
 
 //Segunda Parte. Ver que pasa cuando paso caracteres desde la pc a la placa, uso interruptores, ahora hay que usar la tercer renglon del struct, donde ponemos la funcioon q atiende la interrumpcion y desp un uartreadbyte

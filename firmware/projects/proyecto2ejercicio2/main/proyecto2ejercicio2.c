@@ -1,3 +1,29 @@
+/*! @mainpage Actividad 2 - Medidor de distancia por ultrasonido c/interrupciones
+ *
+ * @section genDesc General Description
+ *
+ * Este programa implementa un medidor de distancia por ultrasonido utilizando interrupciones
+ * para el control de teclas y temporizaciones. Modificación de la Actividad 1 con enfoque en
+ * interrupciones en lugar de consultar constantemente.
+ *
+ * @section hardConn Hardware Connection
+ *
+ * |    Peripheral  |   ESP32   	|
+ * |:--------------:|:--------------|
+ * | 	HC-SR04 Trigger | 	GPIO_3		|
+ * | 	HC-SR04 Echo    | 	GPIO_2		|
+ *
+ * @section changelog Changelog
+ *
+ * |   Date	    | Description                                    |
+ * |:----------:|:-----------------------------------------------|
+ * | 27/10/2025 | Entrega del proyecto 2	                         |
+ *
+ * @author Ana Clara Evequoz (ana.evequoz@ingenieria.uner.edu.ar)
+ *
+ */
+
+/*==================[inclusions]=============================================*/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -80,7 +106,7 @@ static void AtenderTimer(void){
 // hasta que atiende a la tecla, es entrar a la funcion atender tecla y ver lo que te pide 
 // ver en el driver de tecla y ver como habilitar la interrumpcion 
 //ahora con las teclas hago 2 interrupciones en vez de tareas, en el servicio de interruptor hay que tener funciones chiquitas como cambiar una variable, no medir, leer, etc(cosas q no se cuanto tiempo me lleve)
-//con switchactivint activo la interrupcion, hacemos una funcion que cambie el estado de variable hold,a su vez hay 2 funciones ya que hay 2 teclas
+//con switchactivint activo la interrumpcion, hacemos una funcion que cambie el estado de variable hold,a su vez hay 2 funciones ya que hay 2 teclas
 
 //VER NVIC DE TEORIA
 // el reset es una expecion no una interrunpcion que son distintas

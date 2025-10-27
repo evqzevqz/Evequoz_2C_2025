@@ -1,3 +1,29 @@
+/*! @mainpage Actividad 1 - Medidor de distancia por ultrasonido
+ *
+ * @section genDesc General Description
+ *
+ * Este programa implementa un medidor de distancia por ultrasonido utilizando el sensor HC-SR04.
+ * El sistema muestra la distancia medida mediante LEDs y un display LCD, con funcionalidades
+ * de inicio/detención de medición y hold de resultados.
+ *
+ * @section hardConn Hardware Connection
+ *
+ * |    Peripheral  |   ESP32   	|
+ * |:--------------:|:--------------|
+ * | 	HC-SR04 Trigger | 	GPIO_3		|
+ * | 	HC-SR04 Echo    | 	GPIO_2		|
+ *
+ * @section changelog Changelog
+ *
+ * |   Date	    | Description                                    |
+ * |:----------:|:-----------------------------------------------|
+ * | 27/10/2025 | Entrega del proyecto		                         |
+ *
+ * @author Ana Clara Evequoz (ana.evequoz@uner.edu.ar)
+ *
+ */
+
+/*==================[inclusions]=============================================*/
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
